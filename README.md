@@ -7,12 +7,12 @@ Create a nested work tree  where each node has mapper child functions and a redu
 Inspired by https://github.com/goibibo/lithosphere/blob/master/tree.go
 
 **Usage:**
+
     type TwoArgs struct {
         X int
         Y int
     }
     
-    // two level
     func leaf2(i interface{}) interface{} {
         args := i.(TwoArgs)
     
@@ -35,7 +35,7 @@ Inspired by https://github.com/goibibo/lithosphere/blob/master/tree.go
     
     func main() {
     
-        // TWO Level
+        // TWO Level work tree
     
         l2 := li.CommandTree{}
         l2.AddMapper(leaf2, TwoArgs{2, 3})
@@ -43,7 +43,7 @@ Inspired by https://github.com/goibibo/lithosphere/blob/master/tree.go
         l2.AddReducer(merge2)
     
         l1 := li.CommandTree{}
-        l1.AddMapper(l2.Run, nil)
+        l1.AddMapper(l2.Run, nil) // When nesting use nil for Run
         l1.AddMapper(leaf2, TwoArgs{2, 2})
         l1.AddReducer(merge2)
     
