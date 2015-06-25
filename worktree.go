@@ -36,6 +36,28 @@ type ResultFunction struct {
 	Result interface{}
 }
 
+func (t *CommandTree) RunMergeAsync(_ interface{}) interface{} {
+	// Execcute the tree
+
+	channel := make(chan ResultFunction, t.nChildren)
+	defer close(channel)
+
+	for i, f := range t.LeafFunctions {
+		go wrap(channel, i, f, t.LeafFunctionsInput[i])
+	}
+
+	remaining := t.nChildren
+	for remaining > 0 {
+		result := <-channel
+		remaining -= 1
+		res := make([]interface{}, 1, 1)
+		res[0] = result.Result
+		t.Reducer(res)
+	}
+	return nil
+
+}
+
 func (t *CommandTree) Run(_ interface{}) interface{} {
 	// Execcute the tree
 
