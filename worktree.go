@@ -64,6 +64,7 @@ func (t *CommandTree) Run(_ interface{}) interface{} {
 
 	channel := make(chan ResultFunction, t.nChildren)
 	defer close(channel)
+	t.LeafFunctionsOutput = make([]interface{}, 0, t.nChildren)
 
 	for i, f := range t.LeafFunctions {
 		go wrap(channel, i, f, t.LeafFunctionsInput[i])
@@ -73,7 +74,7 @@ func (t *CommandTree) Run(_ interface{}) interface{} {
 	for remaining > 0 {
 		result := <-channel
 		remaining -= 1
-		t.LeafFunctionsOutput = append(t.LeafFunctionsOutput, result.Result)
+		t.LeafFunctionsOutput[result.Child] = result.Result
 	}
 	return t.Reducer(t.LeafFunctionsOutput)
 
