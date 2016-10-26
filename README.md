@@ -4,7 +4,6 @@ Hierarchical, concurrent MapReduce framework
 
 Create a nested work tree  where each node has mapper child functions and a reducer function. All child map functions are executed concurrently in goroutines, and the reducer is called once all the mappers finish.
 
-Inspired by https://github.com/goibibo/lithosphere/blob/master/tree.go
 
 **Usage:**
 
